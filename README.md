@@ -72,15 +72,15 @@ Before setting this up, please read the "Recommended Use" section since we have 
 
 In the Azure Automation Resource, go to modules, and add the following modules:
 
-\- Az.KeyVault
+- Az.KeyVault
 
-\- Az.Resources
+- Az.Resources
 
-\- Az.Sql
+- Az.Sql
 
-\- Az.Storage
+- Az.Storage
 
-\- Az.Accounts 
+- Az.Accounts 
 
 #### Runbook Setup
 
@@ -88,7 +88,20 @@ Now that we have set up the script to run.
 
 1) In the Azure Automation account, go to runbooks. 
 
-1) Create a new runbook 
+1) Click on "Browse Gallery"
+  ![image](https://user-images.githubusercontent.com/8607853/124001165-593c8580-d9a2-11eb-9e74-b7cae8043fc8.png)
+1) In the search field type "CloudWatcher"
+1) Select the CloudWatcher created by "markeytos"
+  ![image](https://user-images.githubusercontent.com/8607853/124001756-f3043280-d9a2-11eb-87b2-24449391e37e.png)
+1) Click Import
+1) Enter the name for your Runbook
+1) This should add the runbook in your runbook list:
+  ![image](https://user-images.githubusercontent.com/8607853/124002176-6a39c680-d9a3-11eb-8d7f-c5da9d44d3c8.png)
+1) Click on it and click the edit button.
+1) Once the editor is open, click the test pane and run the test to make sure it is working properly. **Note: The fist time you run it you should set the run type as baseline to have a baseline in the storage account.**
+1) If the run is successfull, go back to the edit pane and click on publish:
+  ![image](https://user-images.githubusercontent.com/8607853/124002785-285d5000-d9a4-11eb-9452-447bec5992f3.png)
+Your Runbook should now be published and it should allow you to add it to schedules. 
 
 ## Recommended Use
 
