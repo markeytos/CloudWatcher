@@ -31,9 +31,11 @@ Azure has an ever growing number of resources and features, making it impossible
 
 1) Go to Azure Active Directory > Enterprise Applications and select the application created as the runas account. (you might have to change the filter to all applications and search for the name of your application)
 
-1) Copy the object ID shown in the application page. 
+1) Copy the object ID shown in the application page.
 
-1) Run the following commands replacing <App ObjectID> with the app's object Id.
+1) Get the Directory Readers Role ID running 'Get-AzureADDirectoryRole' 
+
+1) Run the following commands replacing <App ObjectID> with the app's object Id. and the role ID with the 'Directory readers' role ID.
 
 ```powershell
 $roleID = '700d08d5-5e3b-4147-aef6-636400b78af6'
