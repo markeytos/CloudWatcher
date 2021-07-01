@@ -108,7 +108,7 @@ function Set-Up {
     Write-Output "Saving Baseline" 
     $OutputFilePath = 'baseline.json'
     $subscriptionsObjects | ConvertTo-Json -Depth 5 |  Out-File -FilePath $OutputFilePath
-    $StorageContext = New-AzStorageContext -StorageAccountName $accountName -StorageAccountKey $accountKey
+    $StorageContext = New-AzStorageContext -StorageAccountName $accountName -SasToken $accountKey
     Set-AzStorageBlobContent -Container $containerName -File $OutputFilePath -Blob "$(Get-Date -Format "MM-dd-yyyy-HH:mm")$($blobName)" -Context $StorageContext
 }
 
@@ -125,7 +125,7 @@ function Get-GroupInfo([PSCustomObject]  $azGroupinfo)
 function Monitor-Subscriptions
 {
     Write-Output  "Getting Json"
-    $StorageContext = New-AzStorageContext -StorageAccountName $accountName -StorageAccountKey $accountKey
+    $StorageContext = New-AzStorageContext -StorageAccountName $accountName -SasToken $accountKey
     $OutputFilePath = "test.json"
     Get-AzStorageBlobContent -Blob $blobName -Container $containerName -Destination $OutputFilePath -Context $StorageContext | Out-Null
     $baselineJSON = Get-Content -Path $OutputFilePath
