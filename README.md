@@ -38,7 +38,7 @@ Azure has an ever growing number of resources and features, making it impossible
 1) Run the following commands replacing <App ObjectID> with the app's object Id. and the role ID with the 'Directory readers' role ID.
 
 ```powershell
-$roleID = '700d08d5-5e3b-4147-aef6-636400b78af6'
+$roleID = '<Role ID>'
 $appObjID = '<APP ObjectID>'
 Connect-AzureAD
 Add-AzureADDirectoryRoleMember -ObjectId $roleID  -RefObjectId  $appObjID
