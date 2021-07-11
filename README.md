@@ -105,6 +105,10 @@ Now that we have set up the script to run.
   ![image](https://user-images.githubusercontent.com/8607853/124002785-285d5000-d9a4-11eb-9452-447bec5992f3.png)
 Your Runbook should now be published and it should allow you to add it to schedules. 
 
+## Instalation Video Tutorial
+  https://youtu.be/z4aY8kFKo8M
+  
+  
 ## Recommended Use
 
 For security reasons we recommend running the automation account, and hosting the storage account in a different subscription than the subscription being hosted. This prevents attackers that get access to your subscription to stop or modify the baseline. 
@@ -119,3 +123,4 @@ At Keytos, we set up the automation account in a subscription that none of the i
 
 The monitoring account, only has reader access to the storage account, meaning that a compromise of that account would not allow changes to the storage account (which is actually hosted in another tenant all together).
 
+  
