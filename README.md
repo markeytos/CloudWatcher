@@ -115,12 +115,12 @@ For security reasons we recommend running the automation account, and hosting th
 
 ### How Did We Set It Up
 
-#### Resource Setup
+At Keytos we wanted to ensure the security of our CloudWatcher deployment. To do this we use 3 different subscriptions, and they all point at each other with CloudWatchers.
+![image](https://user-images.githubusercontent.com/8607853/127204078-438b4f4d-f3cc-43c6-8493-169da6a71f0c.png)
 
-At Keytos, we set up the automation account in a subscription that none of the identities of the monitored subscriptions have access to, and in one of those subscriptions we have a another version monitoring that subscription. 
-
-#### Storage Access
-
-The monitoring account, only has reader access to the storage account, meaning that a compromise of that account would not allow changes to the storage account (which is actually hosted in another tenant all together).
+To simplify it I am just going to show one of the CloudWatchers in the diagram. 
+ ![image](https://user-images.githubusercontent.com/8607853/127204128-9802862f-f2a3-411b-bbe8-88151d8511d8.png)
+ 
+The Idea is that you have the subscription that you want to monitor (Subscription A). Then in a different subscription (Subscription B) that ideally does not share any of the same administrator identities with the subscription you want to monitor, you create the CloudWatcher Automation Account. Then in another Subscription (Subscription C) (At Keytos we do it in another Tenant) you have a storage account with the baseline. The token given to the CloudWatcher in Subscription B only has read access to the baseline blob, meaning that a compromise of that account does not allow to make changes to the baseline. 
 
   
