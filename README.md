@@ -101,11 +101,11 @@ Now that we have set up the script to run.
   ![image](https://user-images.githubusercontent.com/8607853/124002176-6a39c680-d9a3-11eb-8d7f-c5da9d44d3c8.png)
 1) Click on it and click the edit button.
 1) Once the editor is open, click the test pane and run the test to make sure it is working properly. **Note: The fist time you run it you should set the run type as baseline to have a baseline in the storage account.**
-1) If the run is successfull, go back to the edit pane and click on publish:
+1) If the run is successful, go back to the edit pane and click on publish:
   ![image](https://user-images.githubusercontent.com/8607853/124002785-285d5000-d9a4-11eb-9452-447bec5992f3.png)
 Your Runbook should now be published and it should allow you to add it to schedules. 
 
-## Instalation Video Tutorial
+## Installation Video Tutorial
   https://youtu.be/z4aY8kFKo8M
   
   
