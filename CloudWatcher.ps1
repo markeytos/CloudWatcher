@@ -421,10 +421,8 @@ function Monitor-Subscriptions
 
 Disable-AzContextAutosave -Scope Process
 
-$connection = Get-AutomationConnection -Name AzureRunAsConnection
-
 Write-Output "Starting Authentication"
-Connect-AzAccount -ServicePrincipal -Tenant $connection.TenantID  -ApplicationId $connection.ApplicationID  -CertificateThumbprint $connection.CertificateThumbprint
+Connect-AzAccount -Identity
 
 if($RunType -eq "monitoring")
 {
