@@ -1,11 +1,27 @@
 # Cloud Watcher
 Cloud Watcher is an Open Source script that scans your subscription and compares it to a baseline, this helps companies reduce the time to detect breaches to their cloud resources. 
 
+## Available Versions
+
+CloudWatcher is available in two versions:
+1. **PowerShell (Azure Automation)** - `CloudWatcher.ps1` - Designed to run in Azure Automation
+2. **Azure CLI (Bash)** - `CloudWatcher-CLI.sh` - Designed to run in Kubernetes containers or any environment with Azure CLI
+
 ## Requirements
 
+### PowerShell Version (Azure Automation)
 - Azure Account
 - Azure Automation Service with runas service principal
 - Storage Account
+
+### Azure CLI Version (Kubernetes/Container)
+- Azure Account
+- Azure CLI installed (`az` command)
+- `jq` installed for JSON processing
+- Storage Account
+- One of the following authentication methods:
+  - Service Principal with Certificate (App ID + Certificate file)
+  - Managed Service Identity (MSI)
 
 ## In Scope
 
@@ -22,6 +38,140 @@ Azure has an ever growing number of resources and features, making it impossible
 - AKV Firewall changes
 
 ## Installation Instructions
+
+### Azure CLI Version (Kubernetes/Container)
+
+The Azure CLI version (`CloudWatcher-CLI.sh`) can run in any environment with Azure CLI installed, including Kubernetes containers.
+
+#### Prerequisites
+
+1. Install Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+2. Install jq: `apt-get install jq` (or equivalent for your OS)
+3. Create a storage account and container to hold your baseline
+
+#### Authentication Options
+
+The CLI version supports two authentication methods:
+
+##### Option 1: Managed Service Identity (MSI)
+
+Use this when running in Azure Kubernetes Service (AKS) or other Azure compute with managed identity enabled.
+
+```bash
+./CloudWatcher-CLI.sh \
+    --auth-method msi \
+    --storage-account mystorageaccount \
+    --container baseline \
+    --blob-name baseline.json \
+    --sas-token "?sv=2021-06-08&ss=b&srt=co&sp=rwdlacx&se=..." \
+    --run-type setup
+```
+
+##### Option 2: Service Principal with Certificate
+
+Use this for non-Azure environments or when you need explicit credentials.
+
+1. Create an App Registration in Azure AD
+2. Generate a certificate and upload it to the App Registration
+3. Grant the service principal Reader access to the subscriptions you want to monitor
+4. Assign the Directory Readers role to the service principal (see AAD App Creation section below)
+
+```bash
+./CloudWatcher-CLI.sh \
+    --auth-method certificate \
+    --app-id "your-app-id" \
+    --tenant-id "your-tenant-id" \
+    --certificate-path "/path/to/certificate.pem" \
+    --storage-account mystorageaccount \
+    --container baseline \
+    --blob-name baseline.json \
+    --sas-token "?sv=2021-06-08&ss=b&srt=co&sp=rwdlacx&se=..." \
+    --run-type setup
+```
+
+#### Running in Kubernetes
+
+Example Kubernetes CronJob to run CloudWatcher monitoring:
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cloudwatcher
+spec:
+  schedule: "0 * * * *"  # Run every hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cloudwatcher
+            image: mcr.microsoft.com/azure-cli:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              apt-get update && apt-get install -y jq
+              /scripts/CloudWatcher-CLI.sh \
+                --auth-method msi \
+                --storage-account $(STORAGE_ACCOUNT) \
+                --container $(CONTAINER_NAME) \
+                --blob-name $(BLOB_NAME) \
+                --sas-token "$(SAS_TOKEN)" \
+                --run-type monitoring
+            env:
+            - name: STORAGE_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  name: cloudwatcher-secrets
+                  key: storage-account
+            - name: CONTAINER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudwatcher-secrets
+                  key: container-name
+            - name: BLOB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudwatcher-secrets
+                  key: blob-name
+            - name: SAS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudwatcher-secrets
+                  key: sas-token
+            volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          volumes:
+          - name: scripts
+            configMap:
+              name: cloudwatcher-script
+              defaultMode: 0755
+          restartPolicy: OnFailure
+```
+
+#### Command Line Options
+
+```
+Authentication Options:
+  --auth-method <method>    Authentication method: 'certificate' or 'msi'
+  --app-id <id>             Application (client) ID (required for certificate auth)
+  --tenant-id <id>          Tenant ID (required for certificate auth)
+  --certificate-path <path> Path to certificate file (required for certificate auth)
+  --use-msi                 Use Managed Service Identity (shortcut for --auth-method msi)
+
+Storage Options:
+  --storage-account <name>  Storage account name
+  --container <name>        Container name for baseline storage
+  --blob-name <name>        Blob name for baseline file
+  --sas-token <token>       SAS token for storage access
+
+Run Options:
+  --run-type <type>         Run type: 'setup' to create baseline, 'monitoring' to compare
+```
+
+### PowerShell Version (Azure Automation)
 
 ### AAD App Creation and Setup
 
