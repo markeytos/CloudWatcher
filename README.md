@@ -45,7 +45,7 @@ The Azure CLI version (`CloudWatcher-CLI.sh`) can run in any environment with Az
 
 #### Prerequisites
 
-1. Install Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+1. Install Azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 2. Install jq: `apt-get install jq` (or equivalent for your OS)
 3. Create a storage account and container to hold your baseline
 
